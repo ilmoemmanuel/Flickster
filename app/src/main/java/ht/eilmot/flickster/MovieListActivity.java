@@ -21,8 +21,7 @@ public class MovieListActivity extends AppCompatActivity {
     public final static String API_BASE_URL = "https://api.themoviedb.org/3";
     // the parameter name for the API key
     public final static String API_KEY_PARAM = "api_key";
-    // the API key -- TOOO move to a secure location
-    public final static String API_KEY = "a07e22bc18f5cb106bfe4cc1f83ad8ed";
+
     // tag for logging from this activity
     public final static String TAG = "MovieListActivity";
     // instance fields
@@ -48,16 +47,18 @@ public class MovieListActivity extends AppCompatActivity {
         String url = API_BASE_URL + "/configuration";
         // set the request parameters
         RequestParams params = new RequestParams();
-        params.put(API_KEY_PARAM, API_KEY);// API key, always required
+        params.put(API_KEY_PARAM, getString(R.string.api_key));// API key, always required
         // execute a get request expecting a JSON object response
         client.get(url,params, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // get the image base url
                 try {
-                    imageBaseUrl = response.getString("secure_base_url");
+                    JSONObject images = response.getJSONObject("images");
+                    // get the image base url
+                    imageBaseUrl = images.getString("secure_base_url");
                     // get the poster size
-                    JSONArray posterSizeOptions = response.getJSONArray("poster_sizes");
+                    JSONArray posterSizeOptions = images.getJSONArray("poster_sizes");
                     // use the option at the index 3 or 342 as a fallback
                     posterSize = posterSizeOptions.optString(3,"w342");
                 } catch (JSONException e) {
