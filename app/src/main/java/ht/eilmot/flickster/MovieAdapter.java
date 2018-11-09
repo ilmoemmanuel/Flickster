@@ -64,6 +64,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         //  load image using glide
         Glide.with(context)
                 .load(imageUrl)
+                //.bitmapTransform(new RoundedCornersTransformation(25, 0))
+                //.placeholder(R.drawable.flicks_movie_placeholder)
+                //.error(R.drawable.flicks_movie_placeholder)
                 .into(holder.ivPosterImage);
 
 
@@ -75,7 +78,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         return movies.size();
     }
 
-    //create the viewHolder as a static iner class
+    //create the viewHolder as a static inner class
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // track view objects
         ImageView ivPosterImage;
