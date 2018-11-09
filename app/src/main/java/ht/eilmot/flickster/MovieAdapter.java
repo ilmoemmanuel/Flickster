@@ -9,24 +9,40 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
+import ht.eilmot.flickster.models.Config;
 import ht.eilmot.flickster.models.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     // List of movies
     ArrayList<Movie> movies;
+    // config needed for image urls
+    Config config;
+    // context for renderring
+    Context context;
+
     // initialize with list
     public MovieAdapter(ArrayList<Movie> movies){
         this.movies = movies;
 
     }
 
+    public Config getConfig() {
+        return config;
+    }
+
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
     // creates and inflates a new view
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         // get the context and create the inflater
-        Context context = viewGroup.getContext();
+        context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         // create the view using the item_movie layout
         View movieView = inflater.inflate(R.layout.item_movie, viewGroup, false);
@@ -43,7 +59,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         // populate the view with the movie data
         holder.tvTitle.setText(movie.getTitle());
         holder.tvOverview.setText(movie.getOverview());
-        // Tooo -- set image using Glide
+        // build url for poster image
+        String imageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
+        //  load image using glide
+        Glide.with(context)
+                .load(imageUrl)
+                .into(holder.ivPosterImage);
 
 
     }
