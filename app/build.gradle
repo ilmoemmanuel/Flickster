@@ -25,8 +25,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     implementation 'com.loopj.android:android-async-http:1.4.9'
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    //implementation 'com.github.bumptech.glide:glide:4.7.1'
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

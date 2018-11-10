@@ -10,11 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
 import ht.eilmot.flickster.models.Config;
 import ht.eilmot.flickster.models.Movie;
+
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     // List of movies
@@ -61,11 +64,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         holder.tvOverview.setText(movie.getOverview());
         // build url for poster image
         String imageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
+
+        // load image using picasso
+       /* Picasso.get()
+                .load(imageUrl)
+                .bitmapTransform(new RoundedCornersTransformation(25,0))
+                .placeholder(R.drawable.flicks_movie_placeholder)
+                .error(R.drawable.flicks_movie_placeholder)
+                .into(holder.ivPosterImage);*/
         //  load image using glide
+        int radius = 50;// corner radius, higher value = more rounded
+        int margin =30; // crop margin, set to 0 for corners with no crop
+        RequestOptions cropOptions = new RequestOptions().centerCrop();
+
         Glide.with(context)
                 .load(imageUrl)
+                .apply(new RequestOptions().transform(new RoundedCorners(20)).error(R.drawable.flicks_movie_placeholder))
                 //.bitmapTransform(new RoundedCornersTransformation(25, 0))
-                //.placeholder(R.drawable.flicks_movie_placeholder)
+               // .placeholder(R.drawable.flicks_movie_placeholder)
                 //.error(R.drawable.flicks_movie_placeholder)
                 .into(holder.ivPosterImage);
 
