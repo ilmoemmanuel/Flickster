@@ -1,6 +1,7 @@
 package ht.eilmot.flickster;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -62,8 +63,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         // populate the view with the movie data
         holder.tvTitle.setText(movie.getTitle());
         holder.tvOverview.setText(movie.getOverview());
+
+        // determine the current orientation
+        boolean isPortrait = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
         // build url for poster image
-        String imageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
+        String imageUrl = null;
+        // if in portrait mode, load the poster image
+        if(isPortrait){
+            imageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
+        } else {
+            // load the backdrop image
+            imageUrl = config.getImageUrl(config.getBackdropSize(),movie.getBackdropPath());
+        }
+        // get the current placeholder and imageView for the current orientation
+        int placeholderId = isPortrait ? R.drawable.flicks_movie_placeholder : R.drawable.flicks_backdrop_placeholder;
+        ImageView imageView = isPortrait ? holder.ivPosterImage : holder.ivBackdropImage;
 
         // load image using picasso
        /* Picasso.get()
@@ -73,17 +87,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
                 .error(R.drawable.flicks_movie_placeholder)
                 .into(holder.ivPosterImage);*/
         //  load image using glide
-        int radius = 50;// corner radius, higher value = more rounded
-        int margin =30; // crop margin, set to 0 for corners with no crop
+
         RequestOptions cropOptions = new RequestOptions().centerCrop();
 
         Glide.with(context)
                 .load(imageUrl)
-                .apply(new RequestOptions().transform(new RoundedCorners(20)).error(R.drawable.flicks_movie_placeholder))
-                //.bitmapTransform(new RoundedCornersTransformation(25, 0))
-               // .placeholder(R.drawable.flicks_movie_placeholder)
-                //.error(R.drawable.flicks_movie_placeholder)
-                .into(holder.ivPosterImage);
+                .apply(new RequestOptions().transform(new RoundedCorners(20))
+                .placeholder(placeholderId).error(placeholderId))
+                .into(imageView);
 
 
     }
@@ -98,12 +109,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // track view objects
         ImageView ivPosterImage;
+        ImageView ivBackdropImage;
         TextView tvTitle;
         TextView tvOverview;
         public ViewHolder(View itemView){
             super(itemView);
             // lookup view objects by id
             ivPosterImage = itemView.findViewById(R.id.ivPosterImage);
+            ivBackdropImage = (ImageView) itemView.findViewById(R.id.ivBackdropImage);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
         }
